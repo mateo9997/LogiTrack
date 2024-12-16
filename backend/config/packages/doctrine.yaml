@@ -1,7 +1,8 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
-
+        driver: 'pdo_mysql'
+        charset: utf8mb4
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
     orm:

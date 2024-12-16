@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Enum\Role;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -39,6 +38,11 @@ class User implements UserInterface
     }
 
     public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getUserIdentifier(): string
     {
         return $this->id;
     }
