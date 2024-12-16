@@ -10,6 +10,6 @@ class RoleRepository extends ServiceEntityRepository
 {
     public function __constrtuct(ManagerResgistry $registry)
     {
-        parent::__constrruct($registry, Role::class);
+        parent::__construct($registry, Role::class);
     }
 }
