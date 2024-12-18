@@ -15,8 +15,8 @@ services:
     image: mysql:8
     environment:
       MYSQL_DATABASE: logistics
-      MYSQL_USER: user
-      MYSQL_PASSWORD: pass
+      MYSQL_USER: root
+      MYSQL_PASSWORD:
       MYSQL_ROOT_PASSWORD: rootpass
     ports:
       - "3307:3306"

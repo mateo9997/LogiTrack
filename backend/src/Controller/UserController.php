@@ -3,60 +3,68 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Routing\Attribute\Route;
 use App\Service\UserService;
 
+#[Route('/api/users')]
 class UserController extends AbstractController
 {
+    public function __construct(private UserService $userService) {}
 
-    public function __construct(private UserService $userService)
-    {
-    }
-
-    #[Route('/api/users', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[Route('', methods: ['GET'])]
     public function list(): JsonResponse
     {
-        $users = $this->userService->getAllUsers();
-        return $this->json($users, Response::HTTP_OK);
+        try {
+            return $this->json($this->userService->getAllUsers());
+        } catch (\throwable $exception) {
+            return new JsonResponse(['error' => 'unable to fetch list of users', $exception->getMessage()], 500);
+        }
     }
 
-    #[Route('/api/users', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[Route('', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        $user = $this->userService->createUser($data);
-        return $this->json($user, Response::HTTP_CREATED);
+        try{
+            $data = json_decode($request->getContent(), true);
+            return $this->json($this->userService->createUser($data), 201);
+        } catch (\throwable $exception) {
+            return new JsonResponse(['error' => 'unable to create user', $exception->getMessage()], 500);
+        }
     }
 
-    #[Route('/api/users/{id}', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/{id}', methods: ['GET'])]
     public function detail(int $id): JsonResponse
     {
-        $user = $this->userService->getUser($id);
-        return $this->json($user ?? [], $user ? Response::HTTP_OK : Response::HTTP_NOT_FOUND);
+        try{
+            return $this->json($this->userService->getUserDetail($id), 201);
+        }catch(\throwable $exception){
+            return new JsonResponse(['error' => 'user not found', $exception->getMessage()], 404);
+        }
     }
 
-    #[Route('api/users/{id}', methods: ['PUT'])]
-    #[IsGranted('ROLE_ADMIN')]
-    public function update(int $id, Request $request)
+    #[Route('/{id}', methods: ['PUT'])]
+    public function update(int $id, Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        $user = $this->userService->getUser($id, $data);
-        return $this->json($user ?? [], $user ? Response::HTTP_OK : Response::HTTP_NOT_FOUND);
+        try{
+            $data = json_decode($request->getContent(), true);
+            return $this->json($this->userService->updateUser($id, $data));
+        }catch(\throwable $exception){
+            return new JsonResponse(['error' => 'unable to update user', $exception->getMessage()], 500);
+        }
+
     }
 
-    #[Route('/api/users/{id}', methods: ['DELETE'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/{id}', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
-        $this->userService->deleteUser($id);
-        return $this->json([], Response::HTTP_NO_CONTENT);
-    }
+        try{
+            $this->userService->deleteUser($id);
+            return new JsonResponse(null, 204);
+        }catch(\throwable $exception){
+            return new JsonResponse(['error' => 'unable to delete user', $exception->getMessage()], 500);
+        }
 
+    }
 }

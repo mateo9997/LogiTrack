@@ -2,20 +2,20 @@
 
 namespace App\Service;
 
-use App\Entity\User;
-use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
-use DateTime;
+use App\Repository\RoleRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use DateTime;
 
 class UserService
 {
     public function __construct(
         private UserRepository $userRepository,
         private RoleRepository $roleRepository,
-        private EntityManagerInterface $entityManager,
-        private UserPasswordHasherInterface $paswordHasher
+        private EntityManagerInterface $em,
+        private UserPasswordHasherInterface $passwordHasher
     ) {}
 
     public function getAllUsers(): array
@@ -23,7 +23,7 @@ class UserService
         return $this->userRepository->findAll();
     }
 
-    public function getUser(int $id): ?User
+    public function getUser(int $id): object
     {
         return $this->userRepository->find($id);
     }
@@ -32,14 +32,14 @@ class UserService
     {
         $user = new User();
         $user->setUsername($data['username']);
-        $hashedPassword = $this->hashPassword($user, $data['password']);
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $data['password']);
         $user->setPassword($hashedPassword);
 
         $role = $this->roleRepository->findOneBy(['name' => $data['role']]);
         $user->setRole($role);
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $this->em->persist($user);
+        $this->em->flush();
         return $user;
     }
 
@@ -51,27 +51,26 @@ class UserService
         if (isset($data['username'])) {
             $user->setUsername($data['username']);
         }
-
         if (isset($data['password'])) {
-            $hashedPassword = $this->paswordHasher->hashPassword($user, $data['password']);
+            $hashedPassword = $this->passwordHasher->hashPassword($user, $data['password']);
             $user->setPassword($hashedPassword);
         }
-
         if (isset($data['role'])) {
             $role = $this->roleRepository->findOneBy(['name' => $data['role']]);
             $user->setRole($role);
         }
 
         $user->setUpdatedAt(new DateTime());
-        $this->entityManager->flush();
+        $this->em->flush();
         return $user;
     }
 
-    public function deleteUser(int $id): void{
+    public function deleteUser(int $id): void
+    {
         $user = $this->getUser($id);
-        if ($user){
-            $this->entityManager->remove($user);
-            $this->entityManager->flush();
+        if ($user) {
+            $this->em->remove($user);
+            $this->em->flush();
         }
     }
 }
