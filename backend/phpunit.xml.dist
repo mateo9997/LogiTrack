@@ -1,0 +1,23 @@
+<!-- LogiTrack/backend/phpunit.xml.dist -->
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="https://schema.phpunit.de/9.5/phpunit"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+        bootstrap="vendor/autoload.php"
+        colors="true"
+        stderr="true"
+>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>./tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Integration">
+            <directory>./tests/Integration</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <env name="APP_ENV" value="test"/>
+        <env name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/data_test.db"/>
+    </php>
+</phpunit>

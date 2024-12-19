@@ -1,0 +1,22 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: "mysql://user:pass@db:3306/logistics"
+    depends_on:
+      - db
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: logistics
+      MYSQL_USER: root
+      MYSQL_PASSWORD:
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "3307:3306"
