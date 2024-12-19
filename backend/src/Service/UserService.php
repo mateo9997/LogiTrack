@@ -43,7 +43,7 @@ class UserService
         return $user;
     }
 
-    public function updateUser(int $id, array $data): ?User
+    public function updateUser(int $id, array $data): ?object
     {
         $user = $this->getUser($id);
         if (!$user) return null;
