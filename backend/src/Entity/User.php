@@ -22,6 +22,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type:"string")]
     private string $password;
 
+    #[ORM\Column(type: 'string', length: 180, unique: true, nullable: false)]
+    private string $email;
+
     #[ORM\ManyToOne(targetEntity: "App\Entity\Role")]
     #[ORM\JoinColumn(nullable:false)]
     private Role $role;
@@ -67,6 +70,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
+        return $this;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
         return $this;
     }
 

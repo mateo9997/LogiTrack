@@ -30,10 +30,17 @@ namespace App\Tests\Unit;
             $hasher->method('hashPassword')->willReturn('hashed_password');
 
             $service = new UserService($userRepo, $roleRepo, $em, $hasher);
-            $user = $service->createUser(['username'=>'johndoe','password'=>'secret','role'=>'ROLE_COORDINATOR']);
+            $userData = [
+                'username'=>'johndoe',
+                'email'=>'john@example.com',
+                'password'=>'secret',
+                'role'=>'ROLE_COORDINATOR'
+            ];
+            $user = $service->createUser($userData);
 
             $this->assertInstanceOf(User::class, $user);
             $this->assertEquals('johndoe', $user->getUsername());
+            $this->assertEquals('john@example.com', $user->getEmail());
             $this->assertEquals('hashed_password', $user->getPassword());
             $this->assertEquals('ROLE_COORDINATOR', $user->getRole()->getName());
         }
@@ -47,32 +54,32 @@ namespace App\Tests\Unit;
 
             $user = new User();
             $user->setUsername('olduser');
+            $user->setEmail('old@example.com');
             $user->setPassword('oldpass');
-            $oldUpdatedAt = $user->getUserIdentifier();
 
             $newRole = new Role();
             $newRole->setName('ROLE_ADMIN');
 
+            // Mock repository calls
             $userRepo->method('find')->with(123)->willReturn($user);
             $roleRepo->method('findOneBy')->with(['name' => 'ROLE_ADMIN'])->willReturn($newRole);
-
             $hasher->method('hashPassword')->willReturn('new_hashed_password');
-
             $em->expects($this->once())->method('flush');
 
             $service = new UserService($userRepo, $roleRepo, $em, $hasher);
-
-            $updatedUser = $service->updateUser(123, [
+            $updatedData = [
                 'username' => 'newuser',
+                'email' => 'new@example.com',
                 'password' => 'newpass',
                 'role' => 'ROLE_ADMIN'
-            ]);
+            ];
+            $updatedUser = $service->updateUser(123, $updatedData);
 
             $this->assertInstanceOf(User::class, $updatedUser);
             $this->assertEquals('newuser', $updatedUser->getUsername());
+            $this->assertEquals('new@example.com', $updatedUser->getEmail());
             $this->assertEquals('new_hashed_password', $updatedUser->getPassword());
             $this->assertEquals('ROLE_ADMIN', $updatedUser->getRole()->getName());
-            $this->assertNotEquals($oldUpdatedAt, $updatedUser->getUserIdentifier()); // Checking if something changed
         }
         public function testUpdateUserNotFound()
         {
