@@ -32,6 +32,7 @@ class UserService
     {
         $user = new User();
         $user->setUsername($data['username']);
+        $user->setEmail($data['email']);
         $hashedPassword = $this->passwordHasher->hashPassword($user, $data['password']);
         $user->setPassword($hashedPassword);
 
@@ -51,6 +52,11 @@ class UserService
         if (isset($data['username'])) {
             $user->setUsername($data['username']);
         }
+
+        if(isset($data['email'])){
+            $user->setEmail($data['email']);
+        }
+
         if (isset($data['password'])) {
             $hashedPassword = $this->passwordHasher->hashPassword($user, $data['password']);
             $user->setPassword($hashedPassword);
