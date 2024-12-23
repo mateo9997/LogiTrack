@@ -18,12 +18,12 @@ class UserService
         private UserPasswordHasherInterface $passwordHasher
     ) {}
 
-    public function getAllUsers(): array
+    public function listUsers(): array
     {
         return $this->userRepository->findAll();
     }
 
-    public function getUser(int $id): object
+    public function getUserDetail(int $id): ?User
     {
         return $this->userRepository->find($id);
     }
@@ -32,10 +32,17 @@ class UserService
     {
         $user = new User();
         $user->setUsername($data['username']);
-        $user->setEmail($data['email']);
+
+        // Optional email
+        if (!empty($data['email'])) {
+            $user->setEmail($data['email']);
+        }
+
+        // Hashed password
         $hashedPassword = $this->passwordHasher->hashPassword($user, $data['password']);
         $user->setPassword($hashedPassword);
 
+        // Set role
         $role = $this->roleRepository->findOneBy(['name' => $data['role']]);
         $user->setRole($role);
 
@@ -44,24 +51,27 @@ class UserService
         return $user;
     }
 
-    public function updateUser(int $id, array $data): ?object
+    public function updateUser(int $id, array $data): ?User
     {
-        $user = $this->getUser($id);
-        if (!$user) return null;
+        $user = $this->getUserDetail($id);
+        if (!$user) {
+            return null;
+        }
 
-        if (isset($data['username'])) {
+        if (!empty($data['username'])) {
             $user->setUsername($data['username']);
         }
 
-        if(isset($data['email'])){
+        if (!empty($data['email'])) {
             $user->setEmail($data['email']);
         }
 
-        if (isset($data['password'])) {
+        if (!empty($data['password'])) {
             $hashedPassword = $this->passwordHasher->hashPassword($user, $data['password']);
             $user->setPassword($hashedPassword);
         }
-        if (isset($data['role'])) {
+
+        if (!empty($data['role'])) {
             $role = $this->roleRepository->findOneBy(['name' => $data['role']]);
             $user->setRole($role);
         }
@@ -73,7 +83,7 @@ class UserService
 
     public function deleteUser(int $id): void
     {
-        $user = $this->getUser($id);
+        $user = $this->getUserDetail($id);
         if ($user) {
             $this->em->remove($user);
             $this->em->flush();

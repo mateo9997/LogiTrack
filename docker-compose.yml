@@ -6,9 +6,16 @@ services:
     depends_on:
       - backend
   backend:
-    build: ./backend
+    image: your-backend-image:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./config/jwt:/app/config/jwt:ro # Mounts local JWT keys as read-only
     environment:
-      DATABASE_URL: "mysql://user:pass@db:3306/logistics"
+      - JWT_PASSPHRASE=${JWT_PASSPHRASE} # Pass passphrase via environment variable
+    ports:
+      - "9000:9000"
     depends_on:
       - db
   db:
