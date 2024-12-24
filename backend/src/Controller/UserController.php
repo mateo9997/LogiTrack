@@ -17,7 +17,7 @@ class UserController extends AbstractController
     public function list(): JsonResponse
     {
         try {
-            return $this->json($this->userService->getAllUsers());
+            return $this->json($this->userService->listUsers());
         } catch (\throwable $exception) {
             return new JsonResponse(['error' => 'unable to fetch list of users', $exception->getMessage()], 500);
         }
