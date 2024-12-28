@@ -6,8 +6,7 @@
     "start": "ng serve --open",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -22,8 +21,7 @@
     "@angular/material": "~16.2.0",
     "@angular/cdk": "~16.2.0",
     "rxjs": "~7.8.0",
-    "zone.js": "~0.13.0",
-    "tslib": "^2.4.0"
+    "zone.js": "~0.13.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~16.2.0",
@@ -36,12 +34,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
-    "@angular-eslint/builder": "~16.2.0",
-    "@angular-eslint/eslint-plugin": "~16.2.0",
-    "@angular-eslint/eslint-plugin-template": "~16.2.0",
-    "@angular-eslint/schematics": "~16.2.0",
-    "@angular-eslint/template-parser": "~16.2.0",
-    "eslint": "^8.0.0",
     "typescript": "~5.0.4"
   }
 }
