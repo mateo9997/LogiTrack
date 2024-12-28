@@ -5,6 +5,7 @@ import { authGuardFn } from './core/guards/auth.guard';
 import {LoginComponent} from './pages/login/login.component';
 import {DashboardComponent} from './pages/dashboard/dashboard.component';
 import {UserListComponent} from './features/users/user-list/user-list.component';
+import {UserFormComponent} from './features/users/user-form/user-form.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -14,6 +15,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'users', component: UserListComponent },
+      { path: 'users/:id', component: UserFormComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

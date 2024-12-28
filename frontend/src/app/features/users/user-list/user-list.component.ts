@@ -18,7 +18,7 @@ import { UserService } from '../../../core/services/user.service';
 
       <ng-container matColumnDef="role">
         <th mat-header-cell *matHeaderCellDef> Role </th>
-        <td mat-cell *matCellDef="let user">{{ user.role }}</td>
+        <td mat-cell *matCellDef="let user">{{ user.role.name }}</td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="columns"></tr>
