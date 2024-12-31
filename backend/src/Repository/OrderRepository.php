@@ -12,12 +12,18 @@ class OrderRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Order::class);
     }
-    public function findByFilters(?string $status, ?string $assignedUser):
+    public function findByFilters(?string $status, ?string $assignedUser): array
     {
         $qb = $this->createQueryBuilder('o');
 
         if ($status) {
-            $qb->andWwhere
+            $qb->andWhere('o.status = :status')->setParameter('status', $status);
         }
+
+        if ($assignedUser) {
+            $qb->andWhere('o.assignedUser = :assignedUser')->setParamater('assignedUser', $assignedUser);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }
