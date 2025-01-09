@@ -84,5 +84,4 @@ class OrderController extends AbstractController
         $this->orderService->deleteOrder($id);
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
-
 }
