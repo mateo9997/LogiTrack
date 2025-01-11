@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
-import Order = jasmine.Order;
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
@@ -20,7 +19,7 @@ export class OrderService {
     if (assignedUserId) {
       params = params.append('assignedUserId', assignedUserId);
     }
-    return this.http.get<Order[]>(`${environment.apiUrl}/orders`, { params });
+    return this.http.get<any>(`${environment.apiUrl}/orders`, { params });
   }
 
   /**
