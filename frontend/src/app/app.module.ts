@@ -17,6 +17,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { UserListComponent } from './features/users/user-list/user-list.component';
 import { UserFormComponent} from './features/users/user-form/user-form.component';
 import {OrderListComponent} from './features/orders/order-list/order-list.component';
+import {OrderFormComponent} from './features/orders/order-form/order-form.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {OrderListComponent} from './features/orders/order-list/order-list.compon
     DashboardComponent,
     UserListComponent,
     UserFormComponent,
-    OrderListComponent
+    OrderListComponent,
+    OrderFormComponent
   ],
   imports: [
     BrowserModule,
