@@ -4,7 +4,26 @@ import { OrderService } from '../../../core/services/order.service';
 
 @Component({
   selector: 'app-order-detail',
-  templateUrl: './order-detail.component.html'
+  templateUrl: `
+    <h2>Order Detail</h2>
+    <div *ngIf="order">
+        <p><strong>Order #:</strong> {{ order.orderNumber }}</p>
+        <p><strong>Status:</strong> {{ order.status }}</p>
+        <p>
+            <strong>Assigned User:</strong>
+            {{ order.assignedUser ? order.assignedUser.username : 'N/A' }}
+        </p>
+        <div *ngIf="order.shipment">
+            <h4>Shipment</h4>
+            <p>Carrier: {{ order.shipment,carrierName }}</p>
+            <p>Tracking #: {{ order.shipment.trackingNumber }}</p>
+            <p>Estimated Delivery: {{ order.shipment.estimatedDelivery }}</p>
+        </div>
+
+        <button mat-raised-button color="accent" (click)="editOrder()">Edit</button>
+        <button mat-raised-button color="warn" (click)="deleteOrder()">Delete</button>
+    </div>
+  `
 })
 
 export class OrderDetailComponent implements OnInit {
