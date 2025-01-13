@@ -30,5 +30,12 @@ security:
             jwt: ~
 
     access_control:
+        # e.g. only admins can manage users
+        - { path: ^/api/users, roles: ROLE_ADMIN }
+        # reports can be viewed by admin or coordinator
+        - { path: ^/api/reports, roles: [ ROLE_ADMIN, ROLE_COORDINATOR ] }
+        # orders can be managed by admin or coordinator; warehouse can only read or partially update
+        # We'll handle the partial logic in controllers or via custom rules
+        - { path: ^/api/orders, roles: [ ROLE_ADMIN, ROLE_COORDINATOR, ROLE_WAREHOUSE ] }
+        # login is publicly accessible
         - { path: ^/api/auth/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
