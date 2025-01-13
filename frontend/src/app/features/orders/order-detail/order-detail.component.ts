@@ -4,7 +4,7 @@ import { OrderService } from '../../../core/services/order.service';
 
 @Component({
   selector: 'app-order-detail',
-  templateUrl: `
+  template: `
     <h2>Order Detail</h2>
     <div *ngIf="order">
         <p><strong>Order #:</strong> {{ order.orderNumber }}</p>
@@ -15,7 +15,7 @@ import { OrderService } from '../../../core/services/order.service';
         </p>
         <div *ngIf="order.shipment">
             <h4>Shipment</h4>
-            <p>Carrier: {{ order.shipment,carrierName }}</p>
+            <p>Carrier: {{ order.shipment.carrierName }}</p>
             <p>Tracking #: {{ order.shipment.trackingNumber }}</p>
             <p>Estimated Delivery: {{ order.shipment.estimatedDelivery }}</p>
         </div>
