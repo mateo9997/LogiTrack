@@ -19,6 +19,7 @@ import { UserFormComponent} from './features/users/user-form/user-form.component
 import {OrderListComponent} from './features/orders/order-list/order-list.component';
 import {OrderFormComponent} from './features/orders/order-form/order-form.component';
 import {OrderDetailComponent} from './features/orders/order-detail/order-detail.component';
+import {ReportDashboardComponent} from './features/reports/report-dashboard/report-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import {OrderDetailComponent} from './features/orders/order-detail/order-detail.
     UserFormComponent,
     OrderListComponent,
     OrderFormComponent,
-    OrderDetailComponent
+    OrderDetailComponent,
+    ReportDashboardComponent
   ],
   imports: [
     BrowserModule,
