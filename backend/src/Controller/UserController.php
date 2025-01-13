@@ -14,6 +14,7 @@ class UserController extends AbstractController
     public function __construct(private UserService $userService) {}
 
     #[Route('', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function list(): JsonResponse
     {
         try {
@@ -24,6 +25,7 @@ class UserController extends AbstractController
     }
 
     #[Route('', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request): JsonResponse
     {
         try{
@@ -35,6 +37,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function detail(int $id): JsonResponse
     {
         try{
@@ -45,6 +48,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['PUT'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function update(int $id, Request $request): JsonResponse
     {
         try{
@@ -57,6 +61,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', methods: ['DELETE'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(int $id): JsonResponse
     {
         try{
