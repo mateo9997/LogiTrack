@@ -4,7 +4,7 @@ import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-report-dashboard',
-  templateUrl: `
+  template: `
   <h2>Reports Dashboard</h2>
   <div class="overview" *ngIf="overview">
     <h3>Order Overview</h3>
