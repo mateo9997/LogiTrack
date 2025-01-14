@@ -17,7 +17,7 @@ class ReportController extends AbstractController
      * Return an overview of total orders, status counts.
      */
     #[Route('/overview', name: 'report_overview', methods: ['GET'])]
-    #[IsGranted("ROLE_COORDINATOR")]
+    #[IsGranted("ROLE_WAREHOUSE")]
     public function overview(): JsonResponse
     {
         $reportData = $this->reportService->getOrderOverview();
@@ -28,7 +28,7 @@ class ReportController extends AbstractController
      * Return fulfillment rates (delivered vs total).
      */
     #[route('/fulfillment', name: 'report_fulfillment', methods: ['GET'])]
-    #[IsGranted("ROLE_COORDINATOR")]
+    #[IsGranted("ROLE_WAREHOUSE")]
     public function fulfillmentRates(): JsonResponse
     {
         $data = $this->reportService->getFulfillmentRates();

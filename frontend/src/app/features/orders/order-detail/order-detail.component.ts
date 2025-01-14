@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrderService } from '../../../core/services/order.service';
+import {AuthService} from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-order-detail',
@@ -20,8 +21,8 @@ import { OrderService } from '../../../core/services/order.service';
             <p>Estimated Delivery: {{ order.shipment.estimatedDelivery }}</p>
         </div>
 
-        <button mat-raised-button color="accent" (click)="editOrder()">Edit</button>
-        <button mat-raised-button color="warn" (click)="deleteOrder()">Delete</button>
+        <button mat-raised-button color="accent" (click)="editOrder()" *ngIf="canEdit">Edit</button>
+        <button mat-raised-button color="warn" (click)="deleteOrder()" *ngIf="canDelete">Delete</button>
     </div>
   `
 })
@@ -29,16 +30,22 @@ import { OrderService } from '../../../core/services/order.service';
 export class OrderDetailComponent implements OnInit {
   order: any;
   orderId!: number;
+  canEdit = false;
+  canDelete = false;
 
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.order = +this.route.snapshot.params['id'];
+    this.orderId = +this.route.snapshot.params['id'];
     this.loadOrder();
+
+    this.canEdit = this.authService.hasAtLeastRole('ROLE_COORDINATOR');
+    this.canDelete = this.authService.hasAtLeastRole('ROLE_ADMIN');
   }
 
   loadOrder(): void {

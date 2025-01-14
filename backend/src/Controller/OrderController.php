@@ -65,17 +65,12 @@ class OrderController extends AbstractController
      * Roles allowed: Admin, Coordinator can update everything.
      */
     #[Route('/{id}', name: 'order_update', methods: ['PUT'])]
-    #[IsGranted('ROLE_WAREHOUSE')]
+    #[IsGranted('ROLE_COORDINATOR')]
     public function update(Request $request, int $id): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
-        if (!$this->isGranted('ROLE_COORDINATOR') && !$this->isGranted('ROLE_ADMIN')) {
-            unset($data['assignedUserId'], $data['orderNumber']);
-        }
-
-        $order = $this->orderService->updateOrder($id, $data);
-        return $this->json($order ?? [], $order ? Response::HTTP_OK : Response::HTTP_NOT_FOUND);
+        $user = $this->userService->updateUser($id, $data);
+        return $this->json($user ?? [], $user ? Response::HTTP_OK : Response::HTTP_NOT_FOUND);
     }
 
     /**
@@ -83,7 +78,7 @@ class OrderController extends AbstractController
      * Roles allowed: Admin or Coordinator only. (Warehouse cannot delete)
      */
     #[Route('/{id}', name: 'order_delete', methods: ['DELETE'])]
-    #[IsGranted('ROLE_COORDINATOR')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(int $id): JsonResponse
     {
         $this->orderService->deleteOrder($id);

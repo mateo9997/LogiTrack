@@ -15,27 +15,24 @@ security:
             security: false
 
         login:
-            pattern:  ^/api/auth/login
+            pattern: ^/api/auth/login
             stateless: true
             json_login:
-                check_path:               /api/auth/login
-                username_path:            username
-                password_path:            password
-                success_handler:          lexik_jwt_authentication.handler.authentication_success
-                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+                check_path: /api/auth/login
+                username_path: username
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         api:
-            pattern:   ^/api
+            pattern: ^/api
             stateless: true
             jwt: ~
 
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_COORDINATOR, ROLE_WAREHOUSE]
+        ROLE_COORDINATOR: [ROLE_WAREHOUSE]
+
     access_control:
-        # e.g. only admins can manage users
-        - { path: ^/api/users, roles: ROLE_ADMIN }
-        # reports can be viewed by admin or coordinator
-        - { path: ^/api/reports, roles: [ ROLE_ADMIN, ROLE_COORDINATOR ] }
-        # orders can be managed by admin or coordinator; warehouse can only read or partially update
-        # We'll handle the partial logic in controllers or via custom rules
-        - { path: ^/api/orders, roles: [ ROLE_ADMIN, ROLE_COORDINATOR, ROLE_WAREHOUSE ] }
-        # login is publicly accessible
         - { path: ^/api/auth/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
