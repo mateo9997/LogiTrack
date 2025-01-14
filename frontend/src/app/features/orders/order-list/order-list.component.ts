@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../../../core/services/order.service';
 import { Router } from '@angular/router';
+import {AuthService} from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-order-list',
@@ -26,7 +27,7 @@ import { Router } from '@angular/router';
         />
       </mat-form-field>
 
-      <button mat-raised-button color="primary" (click)="createOrder()">
+      <button mat-raised-button color="primary" (click)="createOrder()" *ngIf="canCreate">
         Create New Order
       </button>
     </div>
@@ -73,8 +74,9 @@ export class OrderListComponent implements OnInit {
   displayedColumns = ['orderNumber', 'status', 'assignedUser'];
   statusFilter: string = '';
   assignedUserIdFilter?: number;
+  canCreate = false;
 
-  constructor(private orderService: OrderService, private router: Router) {}
+  constructor(private orderService: OrderService, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadOrders();
@@ -84,6 +86,7 @@ export class OrderListComponent implements OnInit {
     this.orderService
       .getOrders(this.statusFilter, this.assignedUserIdFilter)
       .subscribe((data) => (this.orders = data));
+    this.canCreate = this.authService.hasAtLeastRole('ROLE_COORDINATOR');
   }
 
   createOrder(){

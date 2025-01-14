@@ -18,10 +18,11 @@ class OrderController extends AbstractController
     }
 
    /**
-    * Lists orders, with optional filters: ?status=... & ?assignedUserId=...
+    *  Lists orders with optional filters by status or assignedUser.
+    *  Roles allowed: Admin, Coordinator, Warehouse (they can all see lists).
     */
     #[Route('', name: 'order_list', methods: ['GET'])]
-    #[IsGranted('ROLE_COORDINATOR')]
+    #[IsGranted('ROLE_WAREHOUSE')]
     public function list(Request $request): JsonResponse
     {
         $status = $request->query->get('status');
@@ -31,8 +32,8 @@ class OrderController extends AbstractController
     }
 
     /**
-     * Creates a new order with optional assignedUserId and shipment data.
-     * Expects JSON payload: { "orderNumber": "...", "status": "...", "assignedUserId":..., "shipment": {...} }
+     * Creates a new order.
+     * Roles allowed: Admin, Coordinator. (Warehouse cannot create new orders)
      */
     #[Route('', name: 'order_create', methods: ['POST'])]
     #[IsGranted('ROLE_COORDINATOR')]
@@ -45,10 +46,11 @@ class OrderController extends AbstractController
     }
 
     /**
-     * Retrieves details of a single order by ID.
+     * Retrieve detail for a single order.
+     * Roles allowed: Admin, Coordinator, Warehouse.
      */
     #[Route('/{id}', name: 'order_detail', methods: ['GET'])]
-    #[IsGranted('ROLE_COORDINATOR')]
+    #[IsGranted('ROLE_WAREHOUSE')]
     public function detail(string $id): JsonResponse
     {
         $order = $this->orderService->getOrder($id);
@@ -60,25 +62,23 @@ class OrderController extends AbstractController
 
     /**
      * Updates an existing order.
-     * JSON payload can include { "status": "...", "assignedUserId":..., "shipment": {...}, ... }
+     * Roles allowed: Admin, Coordinator can update everything.
      */
     #[Route('/{id}', name: 'order_update', methods: ['PUT'])]
     #[IsGranted('ROLE_COORDINATOR')]
     public function update(Request $request, int $id): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $order = $this->orderService->updateOrder($id, $data);
-        if (!$order) {
-            return $this->json(['error' => 'Order not found'], Response::HTTP_NOT_FOUND);
-        }
-        return $this->json($order, Response::HTTP_OK);
+        $user = $this->userService->updateUser($id, $data);
+        return $this->json($user ?? [], $user ? Response::HTTP_OK : Response::HTTP_NOT_FOUND);
     }
 
     /**
      * Deletes an existing order by ID.
+     * Roles allowed: Admin or Coordinator only. (Warehouse cannot delete)
      */
     #[Route('/{id}', name: 'order_delete', methods: ['DELETE'])]
-    #[IsGranted('ROLE_COORDINATOR')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(int $id): JsonResponse
     {
         $this->orderService->deleteOrder($id);

@@ -13,7 +13,12 @@ class UserController extends AbstractController
 {
     public function __construct(private UserService $userService) {}
 
+    /**
+     * Lists all users.
+     * Access: ROLE_ADMIN only, or open to ROLE_COORDINATOR if you desire partial visibility.
+     */
     #[Route('', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function list(): JsonResponse
     {
         try {
@@ -23,7 +28,12 @@ class UserController extends AbstractController
         }
     }
 
+    /**
+     * Creates a new user with username/password/email/role.
+     * Access: ROLE_ADMIN only.
+     */
     #[Route('', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function create(Request $request): JsonResponse
     {
         try{
@@ -34,7 +44,12 @@ class UserController extends AbstractController
         }
     }
 
+    /**
+     * Retrieves a single user by ID.
+     * Access: ROLE_ADMIN only (or expand to coordinator if needed).
+     */
     #[Route('/{id}', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function detail(int $id): JsonResponse
     {
         try{
@@ -44,7 +59,12 @@ class UserController extends AbstractController
         }
     }
 
+    /**
+     * Updates a user's info (username, password, role, etc.)
+     * Access: ROLE_ADMIN only.
+     */
     #[Route('/{id}', methods: ['PUT'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function update(int $id, Request $request): JsonResponse
     {
         try{
@@ -56,7 +76,12 @@ class UserController extends AbstractController
 
     }
 
+    /**
+     * Deletes a user by ID.
+     * Access: ROLE_ADMIN only.
+     */
     #[Route('/{id}', methods: ['DELETE'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(int $id): JsonResponse
     {
         try{
@@ -65,6 +90,5 @@ class UserController extends AbstractController
         }catch(\throwable $exception){
             return new JsonResponse(['error' => 'unable to delete user', $exception->getMessage()], 500);
         }
-
     }
 }
